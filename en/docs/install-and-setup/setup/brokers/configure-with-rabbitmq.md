@@ -35,12 +35,16 @@ sender_enable = true
 
 Add the following parameters to enable SSL for the RabbitMQ listener.
 
+```toml
+[[transport.rabbitmq.listener]]
+parameter.ssl_enable = true
+parameter.ssl_version = "SSL"
+```
+
 !!! Tip
-	  Note that keystore information is not required for an SSL connection if the <code>fail_if_no_peer_cert</code> parameter is set to 'false' in the RabbitMQ broker. You only need to enable SSL in the Micro Integrator (using the `parameter.ssl_enable` parameter shown below).
-
-    However, if the <code>fail_if_no_peer_cert</code> parameter is set to 'true' in RabbitMQ, the keystore configurations (given below) are also required for the Micro Integrator.
-
-    Shown below is an example of the config file where `fail_if_no_peer_cert` is set to `false`:
+	  Note that keystore information is not required for an SSL connection if the <code>fail_if_no_peer_cert</code> parameter is set to `false` in the RabbitMQ broker. You only need to enable SSL in the Micro Integrator (using the `parameter.ssl_enable` parameter shown above). You can check the <code>fail_if_no_peer_cert</code> parameter in the <code>rabbitmq.conf</code> file in its <a target="_blank" href="https://www.rabbitmq.com/docs/configure#config-location">OS-specific location</a>.
+    
+    Shown below is an example of the configuration file where `fail_if_no_peer_cert` is set to `false`:
     ```
     ssl_options.cacertfile = /path/to/ca_certificate.pem
     ssl_options.certfile   = /path/to/server_certificate.pem
@@ -49,17 +53,16 @@ Add the following parameters to enable SSL for the RabbitMQ listener.
     ssl_options.fail_if_no_peer_cert = false
     ```
 
-```toml
-[[transport.rabbitmq.listener]]
-parameter.ssl_enable = true
-parameter.ssl_version = "SSL"
-parameter.keystore_location ="repository/resources/security/wso2carbon.jks"
-parameter.keystore_type = "JKS"
-parameter.keystore_password = "wso2carbon"
-parameter.truststore_location ="repository/resources/security/client-truststore.jks"
-parameter.truststore_type = "JKS"
-parameter.truststore_password = "wso2carbon"
-```
+    However, if the <code>fail_if_no_peer_cert</code> parameter is set to `true` in RabbitMQ, the keystore configurations (given below) are also required for the Micro Integrator.
+
+    ```
+    parameter.keystore_location ="repository/resources/security/wso2carbon.jks"
+    parameter.keystore_type = "JKS"
+    parameter.keystore_password = "wso2carbon"
+    parameter.truststore_location ="repository/resources/security/client-truststore.jks"
+    parameter.truststore_type = "JKS"
+    parameter.truststore_password = "wso2carbon"
+    ```
 
 ## Configuring connection recovery
 
@@ -98,3 +101,25 @@ parameter.username = "guest"
 parameter.password = "guest"
 ```
 When configuring the proxy service, be sure to add the following connection factory parameter in the address URI: `rabbitmq.connection.factory=CachedRabbitMQConnectionFactory`.
+
+## Configure proxy-level throttling
+
+To enable throttling for the RabbitMQ proxy service listener, you can add the following configuration to the proxy service:
+
+```toml
+    <parameter name="rabbitmq.proxy.throttle.enabled">true</parameter>
+    <parameter name="rabbitmq.proxy.throttle.mode">fixed-interval</parameter>
+    <parameter name="rabbitmq.proxy.throttle.timeUnit">minute</parameter>
+    <parameter name="rabbitmq.proxy.throttle.count">60</parameter>
+```
+
+!!! Note
+    Allowed parameters for `rabbitmq.proxy.throttle.mode` : fixed-interval, batch
+
+    Allowed parameters for `rabbitmq.proxy.throttle.timeUnit` : minute, hour, day
+
+When enabling throttling for the RabbitMQ proxy service listener, to ensure that the message consumer retrieves only one message at a time from the RabbitMQ queue, you can add the following properties to the proxy service. This will avoid potential data loss if the server is restarted.
+```toml
+    <parameter name="rabbitmq.channel.consumer.qos">1</parameter>
+    <parameter name="rabbitmq.queue.auto.ack">false</parameter>
+```

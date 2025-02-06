@@ -1,134 +1,84 @@
-# Creating a Proxy Service
+# Create a Proxy Service
 
-Follow the instructions given below to create a new [Proxy Service]({{base_path}}/reference/synapse-properties/proxy-service-properties) artifact in WSO2 Integration Studio.
+Follow these instructions to create a [Proxy Service]({{base_path}}/reference/synapse-properties/proxy-service-properties) artifact in the Micro Integrator for Visual Studio Code extension (MI for VS Code).
 
-## Instructions
+## Create a new proxy service artifact
 
-### Creating the Proxy Service artifact
+{!includes/creating-project.md!}
 
-Follow the steps given below.
+    Hereafter, this project will be referred to as `<PROJECT_NAME>`.
 
-1.  Right-click the project in the navigator and go to **New → Proxy Service** to open the **New Proxy Service** dialog box.     
-    <img src="{{base_path}}/assets/img/integrate/create_artifacts/new_proxy_service/select-new-proxy.png">
+3. Go to **MI Project Explorer** > **Proxy Services**.
 
-2.  Select **Create New Proxy Service** and click **Next**.
+4. Hover over **Proxy Services** and click the **+** icon that appears to open the **Proxy Service Form** below.
 
-    <img src="{{base_path}}/assets/img/integrate/create_artifacts/new_proxy_service/create-new-proxy-option.png" width="500">
+    <a href="{{base_path}}/assets/img/develop/create-artifacts/create-proxy-service/proxy-service.png"><img src="{{base_path}}/assets/img/develop/create-artifacts/create-proxy-service/proxy-service.png" alt="proxy service" width="80%"></a>
 
-3.  Enter a unique name for the proxy service and select a proxy service template from the list shown below. These templates will automatically generate the mediation flow that is required for each use case.
+5. Enter a unique name for the proxy service.
 
-    <img src="{{base_path}}/assets/img/integrate/create_artifacts/new_proxy_service/new-proxy-artifact-dialog.png" width="500">
+6. Once you complete the **Proxy Service Form**, click **Create**.
 
-    <table>
-    <tr class="header">
-    <th>Template Type</th>
-    <th>Description</th>
-    </tr>
-    <tbody>
-    <tr class="odd">
-    <td>Pass-Through proxy</td>
-    <td>This template creates a proxy service that forwards messages to the endpoint without performing any processing.</td>
-    </tr>
-    <tr class="even">
-    <td>Transformer proxy</td>
-    <td>This template creates a proxy service that transforms all the incoming requests using XSLT and then forwards them to a given endpoint. If required it can also transform responses from the back-end service according to an XSLT that you specify.</td>
-    </tr>
-    <tr class="odd">
-    <td>Log Forward proxy</td>
-    <td>This template creates a proxy service that first logs all the incoming requests and passes them to a given endpoint. It can also log responses from the backend service before routing them to the client. You can specify the log level for requests and responses.</td>
-    </tr>
-    <tr class="even">
-    <td>WSDL-Based proxy</td>
-    <td>This template generates a proxy service from the remotely hosted WSDL of an existing web service. The endpoint information is extracted from the WSDL you specify. Alternatively, you can generate a proxy service from a WSDL definition as explained <a href="#creating-a-proxy-service-using-a-wsdl-definition">below</a>.
-    </td>
-    </tr>
-    <tr class="odd">
-    <td>Secure proxy</td>
-    <td>This template creates a proxy service that uses WS-Security to process incoming requests and forward them to an unsecured backend service. You simply need to provide the policy file that should be used.</td>
-    </tr>
-    <tr class="even">
-    <td>Custom proxy</td>
-    <td>This template creates an empty proxy service file, where you can manually create the mediation flow by adding all the sequences, endpoints, transports, and other QoS settings.</td>
-    </tr>
-    </tbody>
-    </table>
+!!! info
+    You can switch to the default Visual Studio Code **Explorer** to view the folder structure.
 
-4. Do one of the following to save the proxy service:  
-    -   To save the proxy service in an existing ESB Config project in your workspace, click **Browse** and select that project.
-    -   To save the proxy service in a new ESB Config project, click **Create new Project** and create the new project.
-5. Click **Finish**. 
+    The newly-created proxy service will be stored in the `<PROJECT_NAME>/src/main/wso2mi/artifacts/proxy-services` folder of your integration project.
 
-The proxy service is created in the `src/main/synapse-config/proxy-services` folder under the project you specified.
+## Design the integration
 
-### Creating a Proxy Service using a WSDL definition
+1. Go to the **MI Overview** interface.
 
-Follow the steps given below after opening the **New Proxy Service** dialog box.
+    <a href="{{base_path}}/assets/img/develop/create-artifacts/create-proxy-service/mi-overview.png"><img src="{{base_path}}/assets/img/develop/create-artifacts/create-proxy-service/mi-overview.png" alt="MI overview" width="80%"></a>
 
-1. Select **Generate Proxy Service using WSDL file** and click **Next**.
+2. Click on the proxy service you created to go to its **Resource View**.
 
-    <img src="{{base_path}}/assets/img/integrate/create_artifacts/new_proxy_service/proxy-service-properties.png" width="700">
+    The default **Resource View** will be as follows:
+   
+    <a href="{{base_path}}/assets/img/develop/create-artifacts/create-proxy-service/proxy-service-design-view.png"><img src="{{base_path}}/assets/img/develop/create-artifacts/create-proxy-service/proxy-service-design-view.png" alt="source view" width="80%"></a>
 
-2. Provide a URL or a file location as the source of the WSDL and click **Finish**.
+3. Add the required mediators and connectors and design the integration flow.
 
-    <img src="{{base_path}}/assets/img/integrate/create_artifacts/new_proxy_service/create-proxy-from-wsdl.png" width="600">
+## Update the configurations
 
-You will now see the mediation logic generated from the WSDL as shown below. Note that the [Switch mediator]({{base_path}}/reference/mediators/switch-mediator) is added to the mediation logic and that the different operations given in the WSDL are represented as switch cases.
+1. Go to **MI Overview**.
 
-!!! Tip
-     If your WSDL does not have `SOAPActions` specified for the operations, only the **default** switch case will be generated.
+2. Under **Proxy Services**, select the proxy service you want to edit to go to its **Resource View**.
 
-<img src="{{base_path}}/assets/img/integrate/create_artifacts/new_proxy_service/skeleton-proxy-service-wsdl.png" width="600">
+3. Click the **Edit** icon to edit the proxy service.
 
-### Designing the integration
+    <a href="{{base_path}}/assets/img/develop/create-artifacts/create-proxy-service/edit-proxy-service.png"><img src="{{base_path}}/assets/img/develop/create-artifacts/create-proxy-service/edit-proxy-service.png" alt="Edit proxy service" width="80%"></a>
 
-When you open the proxy service from the **Config** project in the project explorer, you will see the default **Design** view as shown below.
+4. Add the required parameters.
 
-<img src="{{base_path}}/assets/img/integrate/create_artifacts/new_proxy_service/proxy-service-design-view.png" width="800">
+    <a href="{{base_path}}/assets/img/develop/create-artifacts/create-proxy-service/edit-proxy-view.png"><img src="{{base_path}}/assets/img/develop/create-artifacts/create-proxy-service/edit-proxy-view.png" alt="Edit proxy view" width="80%"></a>
 
-Drag and drop the required integration artifacts from the **Palette** to the canvas and design the integration flow.
+5. Click **Update**.
 
-<img src="{{base_path}}/assets/img/integrate/create_artifacts/new_proxy_service/proxy-service-graphical-editor.png" width="800">
+   See the following links for the list of transport parameters you can use:
 
-### Updating the properties
+   - [VFS Parameters]({{base_path}}/reference/synapse-properties/transport-parameters/vfs-transport-parameters)
+   - [JMS Parameters]({{base_path}}/reference/synapse-properties/transport-parameters/jms-transport-parameters)
+   - [FIX Parameters]({{base_path}}/reference/synapse-properties/transport-parameters/fix-transport-parameters)
+   - [MailTo Parameters]({{base_path}}/reference/synapse-properties/transport-parameters/mailto-transport-parameters)
+   - [MQTT Parameters]({{base_path}}/reference/synapse-properties/transport-parameters/mqtt-transport-parameters)
+   - [RabbitMQ Parameters]({{base_path}}/reference/synapse-properties/transport-parameters/rabbitmq-transport-parameters)
 
-To add service-level properties to the proxy service from the **Design** view:
+   See the complete list of [service-level properties and parameters]({{base_path}}/reference/synapse-properties/proxy-service-properties) that you can configure.
 
-1.  Double-click the **Proxy Service** icon to open the <b>Properties</b> tab for the service.
+## Source View
 
-    <img src="{{base_path}}/assets/img/integrate/create_artifacts/new_proxy_service/proxy-service-properties.png" width="700">
+Click the **Show Source** (`</>`) icon located in the top right corner of the VS Code to view the XML-based synapse configuration (source code) of the proxy service.
 
-2.  Expand each section and add the required parameters.
+<a href="{{base_path}}/assets/img/develop/mi-for-vscode/qsg/show-source-view.png"><img src="{{base_path}}/assets/img/develop/mi-for-vscode/qsg/show-source-view.png" alt="Show source view" width="30%"></a>
 
-To add service-level transport parameters:
+You can update the proxy service using this view.
 
-1.  Go to the **Properties** tab and expand the **Parameters** section as shown below.
+<a href="{{base_path}}/assets/img/develop/create-artifacts/create-proxy-service/source-view.png"><img src="{{base_path}}/assets/img/develop/create-artifacts/create-proxy-service/source-view.png" alt="source view" width="80%"></a>
 
-    <img src="{{base_path}}/assets/img/integrate/create_artifacts/new_proxy_service/service-level-params.png" width="700">
+!!! abstract "Learn more about proxy services"
 
-2.  Click the **plus** <img src="{{base_path}}/assets/img/integrate/common/plus-icon.jpg" width="20"> icon and add the parameter name and value as a key-value pair:
+    Follow our examples on proxy services: 
 
-    <img src="{{base_path}}/assets/img/integrate/create_artifacts/new_proxy_service/service-level-params-dialog.png" width="500">
-
-See the following links for the list of transport parameters you can use:
-
-  - [VFS Parameters]({{base_path}}/reference/synapse-properties/transport-parameters/vfs-transport-parameters)
-  - [JMS Parameters]({{base_path}}/reference/synapse-properties/transport-parameters/jms-transport-parameters)
-  - [FIX Parameters]({{base_path}}/reference/synapse-properties/transport-parameters/fix-transport-parameters)
-  - [MailTo Parameters]({{base_path}}/reference/synapse-properties/transport-parameters/mailto-transport-parameters)
-  - [MQTT Parameters]({{base_path}}/reference/synapse-properties/transport-parameters/mqtt-transport-parameters)
-  - [RabbitMQ Parameters]({{base_path}}/reference/synapse-properties/transport-parameters/rabbitmq-transport-parameters)
-
-3.  See the complete list of [service-level properties and parameters]({{base_path}}/reference/synapse-properties/proxy-service-properties) that you can configure.
-
-### Using the Source View
-
-Click the **Source** tab to view the XML-based synapse configuration (source code) of the proxy service. You can update the service using this view.
-
-<img src="{{base_path}}/assets/img/integrate/create_artifacts/new_proxy_service/proxy-service-source-view.png" width="800">
-
-## Examples
-
--   [Using a Simple Proxy Service]({{base_path}}/learn/examples/proxy-service-examples/introduction-to-proxy-services)
--   [Publishing a Custom WSDL]({{base_path}}/learn/examples/proxy-service-examples/publishing-a-custom-wsdl)
--   [Exposing a Proxy Service via Inbound Endpoint]({{base_path}}/learn/examples/proxy-service-examples/exposing-proxy-via-inbound)
--   [Securing Proxy Services]({{base_path}}/learn/examples/proxy-service-examples/securing-proxy-services)
+    - [Using a Simple Proxy Service]({{base_path}}/learn/examples/proxy-service-examples/introduction-to-proxy-services)
+    - [Publishing a Custom WSDL]({{base_path}}/learn/examples/proxy-service-examples/publishing-a-custom-wsdl)
+    - [Exposing a Proxy Service via Inbound Endpoint]({{base_path}}/learn/examples/proxy-service-examples/exposing-proxy-via-inbound)
+    - [Securing Proxy Services]({{base_path}}/learn/examples/proxy-service-examples/securing-proxy-services)

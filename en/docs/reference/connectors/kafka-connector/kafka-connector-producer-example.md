@@ -4,7 +4,7 @@ Given below is a sample scenario that demonstrates how to send messages to a Kaf
 
 ## What you'll build
 
-Given below is a sample API that illustrates how you can connect to a Kafka broker and then use the `publishMessages` operation to publish messages via the topic. It exposes Kafka functionalities as a RESTful service. Users can invoke the API using HTTP/HTTPs with the required information.
+Given below is a sample API that illustrates how you can connect to a Kafka broker with the `init` operation and then use the `publishMessages` operation to publish messages via the topic. It exposes Kafka functionalities as a RESTful service. Users can invoke the API using HTTP/HTTPs with the required information.
 
 API has the context `/publishMessages`. It will publish messages via the topic to the Kafka server.
 
@@ -14,75 +14,70 @@ The following diagram illustrates all the required functionality of the Kafka se
 
 If you do not want to configure this yourself, you can simply [get the project](#get-the-project) and run it.
 
-## Set up Kafka
+## Set up kafka
 
-Before you begin, set up Kafka by following the instructions in [Setting up Kafka]({{base_path}}/reference/connectors/ksfka-connector/setting-up-kafka/).
+Before you begin, set up Kafka by following the instructions in [Setting up Kafka]({{base_path}}/reference/connectors/kafka-connector/setting-up-kafka/).
 
-## Configure the connector in WSO2 Integration Studio
+## Set up the integration project
 
-Follow these steps to set up the Integration Project and the Connector Exporter Project. 
+1. Follow the steps in [create integration project]({{base_path}}/develop/create-integration-project/) guide to set up the Integration Project.
 
-{!includes/reference/connectors/importing-connector-to-integration-studio.md!}
+2. Create a new Kafka connection. 
+    1. Goto `Local Entries` -> `Connections` and click on the `+` sign. 
+    2. Select  `KafkaTransport` connector.
+        <img src="{{base_path}}/assets/img/integrate/connectors/kafka-conn-add-new-connection.png" title="Add new kafka connection" width="800" alt="Add new kafka connection"/>
 
-7. Specify the API name as `KafkaTransport` and API context as `/publishMessages`. 
+    3. Use the following values to create the connection. 
+        - Connection Name - `KafkaConnection`
+        - Connection Type - `kafka`
+        - Bootstrap Servers - `localhost:9092` 
+        - Key Serializer Class - `org.apache.kafka.common.serialization.StringSerializer`
+        - Value Serializer Class - `org.apache.kafka.common.serialization.StringSerializer`
+        - Pooling Enabled - `false`
 
-8. To configure the resource click on the API Resource and go to **Properties** view. Select the `POST` method.
+## Create the integration logic
 
-9. Next drag and drop the `publishMessages` operation of the KafkaTransport Connector to the Design View as shown below.
-   <a href="{{base_path}}/assets/img/integrate/connectors/kafka"><img src="{{base_path}}/assets/img/integrate/connectors/kafka/kafka-add-connector.png" title="Add publishMessages connector operation" width="800" alt="Add publishMessages connector operation"/></a>
+1. Select Micro Integrator and click on `+` in APIs to create a REST API. Provide `KafkaTransport` as name and `publishMessages` as context.
+   <img src="{{base_path}}/assets/img/integrate/connectors/kafka-conn-add-api.png" title="Adding a Rest API" width="800" alt="Adding a Rest API"/>
 
-10. Create a connection from the properties window by clicking on the **+** icon as shown below.
+2. Create a resource with the below configuration.<br/>
+    <img src="{{base_path}}/assets/img/integrate/connectors/kafka-conn-add-resource.png" title="Adding API Resource" width="400" alt="Adding API Resource"/>
 
-    <a href="{{base_path}}/assets/img/integrate/connectors/kafka"><img src="{{base_path}}/assets/img/integrate/connectors/kafka/kafka-add-connection.png" title="Create Connection" width="800" alt="Create Connection"/></a>
+3. Select the created resource and add the `PublishMessages` operation.
+    <img src="{{base_path}}/assets/img/integrate/connectors/kafka-conn-add-operation.png" title="Adding operation" width="800" alt="Adding operation"/>
 
-    In the popup window, provide the following parameters.
+    - Use the following values to fill the appearing form.
+        - Connection - `KafkaConnection`
+        - Topic - `test`
+        - Partition Number - `0`
 
-    - Bootstrap Servers - The Kafka brokers listed as `host1:port1` and `host2:port2`.
-    - Key Serializer Class - The serializer class for the key that implements the serializer interface.
-    - Value Serializer Class - The serializer class for the value that implements the serializer interface.
+        <img src="{{base_path}}/assets/img/integrate/connectors/kafka-conn-config-operation.png" title="Configure operation" width="400" alt="Configure operation"/>
 
-11. After the connection is successfully created, select the created connection as `Connection` from the drop down menu in the properties window.
+The source view of the XML configuration file of the API will be as below.
 
-12. Next, configure the following parameters in the properties window.
-    - Topic - The name of the topic
-    - Partition Number - The partition number of the topic
-
-      <a href="{{base_path}}/assets/img/integrate/connectors/kafka"><img src="{{base_path}}/assets/img/integrate/connectors/kafka/kafka-properties.png" title="Kafka Properties" width="800" alt="Kafka Properties"/></a>
-
-13. You can find the API XML as follows:
-    ```xml
-    <?xml version="1.0" encoding="UTF-8"?>
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
     <api context="/publishMessages" name="KafkaTransport" xmlns="http://ws.apache.org/ns/synapse">
-        <resource methods="POST">
-            <inSequence>
-                <kafkaTransport.publishMessages configKey="KAFKA_CONNECTION_1">
-                    <topic>test</topic>
-                    <partitionNo>0</partitionNo>
-                </kafkaTransport.publishMessages>
-            </inSequence>
-            <outSequence/>
-            <faultSequence/>
-        </resource>
+    <resource methods="POST">
+        <inSequence>
+            <kafkaTransport.publishMessages configKey="KafkaConnection">
+                <topic>test</topic>
+                <partitionNo>0</partitionNo>
+                <keySchemaSoftDeleted>false</keySchemaSoftDeleted>
+                <valueSchemaSoftDeleted>false</valueSchemaSoftDeleted>
+            </kafkaTransport.publishMessages>
+        </inSequence>
+        <faultSequence>
+        </faultSequence>
+    </resource>
     </api>
-    ```
-14. Following is the local entry generated: 
-    ```xml
-    <?xml version="1.0" encoding="UTF-8"?>
-    <localEntry key="KAFKA_CONNECTION_1" xmlns="http://ws.apache.org/ns/synapse">
-        <kafkaTransport.init>
-            <name>KAFKA_CONNECTION_1</name>
-            <valueSerializerClass>org.apache.kafka.common.serialization.StringSerializer</valueSerializerClass>
-            <connectionType>kafka</connectionType>
-            <keySerializerClass>org.apache.kafka.common.serialization.StringSerializer</keySerializerClass>
-            <bootstrapServers>localhost:9092</bootstrapServers>
-            <poolingEnabled>false</poolingEnabled>
-        </kafkaTransport.init>
-    </localEntry>
-    ```
+```
 
-Now we can export the imported connector and the API into a single CAR application. The CAR application needs to be deployed during server runtime. 
+Now, we can export the imported connector and the API into a single CAR application. The CAR application needs to be deployed during server runtime. 
 
-{!includes/reference/connectors/exporting-artifacts.md!}
+## Export integration logic as a carbon application 
+
+To export the project, please refer to the [build and export the carbon application]({{base_path}}/develop/deploy-artifacts/#build-and-export-the-carbon-application) guide. 
 
 ## Get the project
 
@@ -94,50 +89,35 @@ You can download the ZIP file and extract the contents to get the project code.
 
 ## Deployment
 
-Follow these steps to deploy the exported CApp in the integration runtime. 
+To deploy and run the project, please refer to the [build and run]({{base_path}}/develop/deploy-artifacts/#build-and-run) guide.
 
-**Deploying on Micro Integrator**
-
-You can copy the composite application to the `<PRODUCT-HOME>/repository/deployment/server/carbonapps` folder and start the server. Micro Integrator will be started and the composite application will be deployed.
-
-You can further refer the application deployed through the CLI tool. See the instructions on [managing integrations from the CLI]({{base_path}}/observe-and-manage/managing-integrations-with-apictl).
-
-??? note "Click here for instructions on deploying on WSO2 Enterprise Integrator 6"
-    1. You can copy the composite application to the `<PRODUCT-HOME>/repository/deployment/server/carbonapps` folder and start the server.
-
-    2. WSO2 EI server starts and you can login to the Management Console via the `https://localhost:9443/carbon/` URL. Provide login credentials. The default credentials will be `admin/admin`. 
-
-    3. You can see that the API is deployed under the API section. 
+You can further refer the application deployed through the CLI tool. See the instructions on [managing integrations from the CLI]({{base_path}}/observe-and-manage/managing-integrations-with-micli).
     
-## Testing
+## Test
 
 **Create a topic**:
 
-Let’s create a topic named “test” with a single partition and only one replica.
-Navigate to the `<KAFKA_HOME>` and run following command.
-   
+Let’s create a topic named `test` with a single partition and only one replica.
+Navigate to the `<KAFKA_HOME>` and run following command. 
 ```bash
 bin/kafka-topics.sh --create --bootstrap-server localhost:9092 --replication-factor 1 --partitions 1 --topic test     
 ```
 
-**Sample Request**:
+**Sample request**:
    
 Send a message to the Kafka broker using a CURL command or sample client.
-
 ```bash
 curl -X POST -d '{"name":"sample"}' "http://localhost:8290/publishMessages" -H "Content-Type:application/json" -v
 ```
 
-**Expected Response**: 
+**Expected response**: 
    
 Navigate to the `<KAFKA_HOME>` and run the following command to verify the messages:
-
 ```bash
 bin/kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic test --from-beginning
 ```
 
 See the following message content:
-
 ```bash
 {"name":"sample"}
 ```   

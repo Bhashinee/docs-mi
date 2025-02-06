@@ -1,4 +1,4 @@
-# Setting up Kafka
+# Set up Kafka
 
 ## For Kafka inbound endpoint
 
@@ -21,8 +21,8 @@ Copy the following additional client libraries to the `<MI_HOME>/lib` directory.
 To use the Kafka connector, download and install [Apache Kafka](http://kafka.apache.org/downloads.html). Before you start configuring Kafka you also need the integration runtime and we refer to that location as `<PRODUCT_HOME>`.
 
 !!!Note
-    - The Kafka connector has been tested with the Kafka versions listed below. 
-    - To access all downloadable versions of Kafka, see the [Kafka documentation](https://kafka.apache.org/downloads). 
+    - The Kafka connector has been tested with the Kafka versions listed below.
+    - To access all downloadable versions of Kafka, see the [Kafka documentation](https://kafka.apache.org/downloads).
     - The recommended version of Java is 11.
 
 ### Kafka version 2.8.2
@@ -86,13 +86,13 @@ Now that you have connected to Kafka, you can start publishing and consuming mes
 To use the Kafka connector, download and install [Apache Kafka](http://kafka.apache.org/downloads.html). Before you start configuring the Kafka you also need the integration runtime and we refer to that location as `<PRODUCT_HOME>`.
 
 !!!Note
-    - The recommended version of Kafka is Kafka_2.11-2.2.1. 
-    - To access all downloadable versions of Kafka, see the [Kafka documentation](https://kafka.apache.org/downloads). 
+    - The recommended version of Kafka is Kafka_2.11-2.2.1.
+    - To access all downloadable versions of Kafka, see the [Kafka documentation](https://kafka.apache.org/downloads).
     - The recommended version of Java is 1.8.
 
 1. To configure the Kafka connector, copy the following client libraries from the `<KAFKA_HOME>/lib` directory to the `<MI_HOME>/lib` directory.
 
-    * [kafka_2.11-2.2.1.jar](https://mvnrepository.com/artifact/org.apache.kafka/kafka_2.11/2.2.1)  
+    * [kafka_2.11-2.2.1.jar](https://mvnrepository.com/artifact/org.apache.kafka/kafka_2.11/2.2.1)
     * [kafka-clients-1.0.0.jar](https://mvnrepository.com/artifact/org.apache.kafka/kafka-clients/1.0.0)
     * [metrics-core-2.2.0.jar](https://mvnrepository.com/artifact/com.yammer.metrics/metrics-core/2.2.0)
     * [scala-library-2.12.3.jar](https://mvnrepository.com/artifact/org.scala-lang/scala-library/2.12.3)

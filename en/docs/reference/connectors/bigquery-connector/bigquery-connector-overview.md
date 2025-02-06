@@ -2,7 +2,7 @@
 
 The BigQuery connector allows you to access the [BigQuery REST API](https://cloud.google.com/bigquery/docs/reference/rest) from an integration sequence. BigQuery is a tool that allows you to execute SQL-like queries on large amounts of data at outstanding speeds. It is a serverless Software as a Service that supports querying using ANSI SQL.
 
-To see the BigQuery Connector, navigate to the [connector store](https://store.wso2.com/store/assets/esbconnector/list) and search for "Event". **BigQuery** is the name of the connector that has this functionality.
+Go to the <a target="_blank" href="https://store.wso2.com/connector/mi-connector-bigquery">WSO2 Connector Store</a> to download the BigQuery connector.
 
 <img src="{{base_path}}/assets/img/integrate/connectors/bigquery-store.png" title="BigQuery Connector Store" width="200" alt="BigQuery Connector Store"/>
 
@@ -14,7 +14,7 @@ To see the BigQuery Connector, navigate to the [connector store](https://store.w
 
 For older versions, see the details in the connector store.
 
-## BigQuery Connector Documentation
+## BigQuery connector documentation
 
 * **[BigQuery Connector Example]({{base_path}}/reference/connectors/bigquery-connector/bigquery-connector-example/)**: This example demonstrates how to work with the BigQuery Connector. 
 

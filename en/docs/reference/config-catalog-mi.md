@@ -348,7 +348,7 @@ password = "$secret{password}"</code></pre>
 </div>
 
 
-## Micro Integrator Dashboard
+## Integration Control Plane
 
 <div class="mb-config-catalog">
     <section>
@@ -372,7 +372,7 @@ node_id = "dev_node_2"</code></pre>
                             <code>[dashboard_config]</code>
                             <span class="badge-required">Required</span>
                             <p>
-                                This configuration header is required for the Micro Integrator server to connect with the dashboard server.
+                                This configuration header is required for the Micro Integrator server to connect with the Integration Control Plane.
                             </p>
                         </div>
                         <div class="params-wrap">
@@ -394,7 +394,7 @@ node_id = "dev_node_2"</code></pre>
                                         </div>
                                     </div>
                                     <div class="param-description">
-                                        <p>The URL to access the dashboard server. Be sure to replace {hostname/ip} and {port} with the relevant values from your environment.</p>
+                                        <p>The URL to access the Integration Control Plane. Be sure to replace {hostname/ip} and {port} with the relevant values from your environment.</p>
                                     </div>
                                 </div>
                             </div><div class="param">
@@ -413,7 +413,7 @@ node_id = "dev_node_2"</code></pre>
                                         
                                     </div>
                                     <div class="param-description">
-                                        <p>The time interval (in seconds) between two consecutive heartbeats that are sent from the Micro Integrator to the dashboard server.</p>
+                                        <p>The time interval (in seconds) between two consecutive heartbeats that are sent from the Micro Integrator to the ICP server.</p>
                                     </div>
                                 </div>
                             </div><div class="param">
@@ -434,7 +434,7 @@ node_id = "dev_node_2"</code></pre>
                                         </div>
                                     </div>
                                     <div class="param-description">
-                                        <p>The server group to which the Micro Integrator instance belongs. Specify the same group ID in all the Micro Integrator servers that should belong to a single group. By default, a &#39;group_id&#39; named &#39;default&#39; is assinged to every Micro Integrator server that connects to the dashboard. When you sign in to the dashboard, you can view data per server group.</p>
+                                        <p>The server group to which the Micro Integrator instance belongs. Specify the same group ID in all the Micro Integrator servers that should belong to a single group. By default, a &#39;group_id&#39; named &#39;default&#39; is assinged to every Micro Integrator server that connects to the ICP server. When you sign in to the ICP server, you can view data per server group.</p>
                                     </div>
                                 </div>
                             </div><div class="param">
@@ -455,7 +455,7 @@ node_id = "dev_node_2"</code></pre>
                                         </div>
                                     </div>
                                     <div class="param-description">
-                                        <p>The dashboard identifies the Micro Integrator node by this ID. If you have already specified a node ID when you set up the Micro Integrator cluster, the same node ID applies here by default. However, if a node ID is not defined in your clustering configurations, a random uuid is used here by default.</p>
+                                        <p>The ICP server identifies the Micro Integrator node by this ID. If you have already specified a node ID when you set up the Micro Integrator cluster, the same node ID applies here by default. However, if a node ID is not defined in your clustering configurations, a random uuid is used here by default.</p>
                                     </div>
                                 </div>
                             </div>
@@ -532,7 +532,7 @@ key_password = "wso2carbon"</code></pre>
                                             <span class="param-default-value">Default: <code>JKS</code></span>
                                         </div>
                                         <div class="param-possible">
-                                            <span class="param-possible-values">Possible Values: <code>&quot;JKS&quot;, &quot;PKCS12&quot;</code></span>
+                                            <span class="param-possible-values">Possible Values: <code>&quot;JKS&quot;</code></span>
                                         </div>
                                     </div>
                                     <div class="param-description">
@@ -670,7 +670,7 @@ key_password = "wso2carbon"</code></pre>
                                             <span class="param-default-value">Default: <code>JKS</code></span>
                                         </div>
                                         <div class="param-possible">
-                                            <span class="param-possible-values">Possible Values: <code>&quot;JKS&quot;, &quot;PKCS12&quot;</code></span>
+                                            <span class="param-possible-values">Possible Values: <code>&quot;JKS&quot;</code></span>
                                         </div>
                                     </div>
                                     <div class="param-description">
@@ -863,7 +863,7 @@ alias="symmetric.key.value"</code></pre>
                                             <span class="param-default-value">Default: <code>JKS</code></span>
                                         </div>
                                         <div class="param-possible">
-                                            <span class="param-possible-values">Possible Values: <code>&quot;JKS&quot;, &quot;PKCS12&quot;</code></span>
+                                            <span class="param-possible-values">Possible Values: <code>&quot;JKS&quot;</code></span>
                                         </div>
                                     </div>
                                     <div class="param-description">
@@ -3726,25 +3726,25 @@ listener.verify_client = "require"
 listener.ssl_profile.file_path = "conf/sslprofiles/listenerprofiles.xml"
 listener.ssl_profile.read_interval = "1h"
 listener.preferred_ciphers = "TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA256,TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256,TLS_DHE_RSA_WITH_AES_128_CBC_SHA256,TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA,TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA,TLS_DHE_RSA_WITH_AES_128_CBC_SHA,TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256,TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256,TLS_DHE_RSA_WITH_AES_128_GCM_SHA256"
-listener.keystore.location ="$ref{keystore.tls.file_name}"
-listener.keystore.type = "$ref{keystore.tls.type}"
-listener.keystore.password = "$ref{keystore.tls.password}"
-listener.keystore.key_password = "$ref{keystore.tls.key_password}"
-listener.truststore.location = "$ref{truststore.file_name}"
-listener.truststore.type = "$ref{truststore.type}"
-listener.truststore.password = "$ref{truststore.password}"
+listener.keystore.location ="repository/resources/security/wso2carbon.jks"
+listener.keystore.type = "JKS" 
+listener.keystore.password = "wso2carbon"
+listener.keystore.key_password = "wso2carbon"
+listener.truststore.location = "repository/resources/security/client-truststore.jks"
+listener.truststore.type = "JKS"
+listener.truststore.password = "wso2carbon"
 sender.warn_on_http_500 = "*"
 sender.proxy_host = "$ref{server.hostname}"
 sender.proxy_port = 3128
 sender.non_proxy_hosts = ["$ref{server.hostname}"]
 sender.hostname_verifier = "AllowAll"
-sender.keystore.location ="$ref{keystore.tls.file_name}"
-sender.keystore.type = "$ref{keystore.tls.type}"
-sender.keystore.password = "$ref{keystore.tls.password}"
-sender.keystore.key_password = "$ref{keystore.tls.key_password}"
-sender.truststore.location = "$ref{truststore.file_name}"
-sender.truststore.type = "$ref{truststore.type}"
-sender.truststore.password = "$ref{truststore.password}"
+sender.keystore.location ="repository/resources/security/wso2carbon.jks"
+sender.keystore.type = "JKS"
+sender.keystore.password = "wso2carbon"
+sender.keystore.key_password = "wso2carbon"
+sender.truststore.location = "repository/resources/security/client-truststore.jks"
+sender.truststore.type = "JKS"
+sender.truststore.password = "wso2carbon"
 sender.ssl_profile.file_path = "conf/sslprofiles/senderprofiles.xml"
 sender.ssl_profile.read_interval = "30s"
 enable_message_size_validation = false
@@ -4018,6 +4018,47 @@ force_json_validation = false</code></pre>
                                 </div>
                             </div><div class="param">
                                 <div class="param-name">
+                                  <span class="param-name-wrap"> <code>listener.secured_wsdl_epr_prefix</code> </span>
+                                </div>
+                                <div class="param-info">
+                                    <div>
+                                        <p>
+                                            <span class="param-type string"> string </span>
+                                        </p>
+                                        <div class="param-default">
+                                            <span class="param-default-value">Default: <code>$ref{server.hostname}</code></span>
+                                        </div>
+                                        <div class="param-possible">
+                                            <span class="param-possible-values">Possible Values: <code>-</code></span>
+                                        </div>
+                                    </div>
+                                    <div class="param-description">
+                                        <p>A URL prefix which will be added to all service EPRs and EPRs in WSDLs etc in HTTPS.</p>
+                                    </div>
+                                </div>
+                            </div><div class="param">
+                                <div class="param-name">
+                                  <span class="param-name-wrap"> <code>listener.secured_protocols</code> </span>
+                                </div>
+                                <div class="param-info">
+                                    <div>
+                                        <p>
+                                            <span class="param-type string"> string </span>
+                                            <span class="badge-required">Required</span>
+                                        </p>
+                                        <div class="param-default">
+                                            <span class="param-default-value">Default: <code>TLSv1,TLSv1.1,TLSv1.2</code></span>
+                                        </div>
+                                        <div class="param-possible">
+                                            <span class="param-possible-values">Possible Values: <code>-</code></span>
+                                        </div>
+                                    </div>
+                                    <div class="param-description">
+                                        <p>TLS (Transport Layer Security) protocols should be allowed when securing HTTP communications through HTTPS.</p>
+                                    </div>
+                                </div>
+                            </div><div class="param">
+                                <div class="param-name">
                                   <span class="param-name-wrap"> <code>listener.keystore.location</code> </span>
                                 </div>
                                 <div class="param-info">
@@ -4051,7 +4092,7 @@ force_json_validation = false</code></pre>
                                             <span class="param-default-value">Default: <code>JKS</code></span>
                                         </div>
                                         <div class="param-possible">
-                                            <span class="param-possible-values">Possible Values: <code>&quot;JKS&quot; or &quot;PKCS12&quot;</code></span>
+                                            <span class="param-possible-values">Possible Values: <code>&quot;JKS&quot;</code></span>
                                         </div>
                                     </div>
                                     <div class="param-description">
@@ -4135,7 +4176,7 @@ force_json_validation = false</code></pre>
                                             <span class="param-default-value">Default: <code>JKS</code></span>
                                         </div>
                                         <div class="param-possible">
-                                            <span class="param-possible-values">Possible Values: <code>&quot;JKS&quot; or &quot;PKCS12&quot;</code></span>
+                                            <span class="param-possible-values">Possible Values: <code>&quot;JKS&quot;</code></span>
                                         </div>
                                     </div>
                                     <div class="param-description">
@@ -4429,7 +4470,7 @@ force_json_validation = false</code></pre>
                                             <span class="param-default-value">Default: <code>JKS</code></span>
                                         </div>
                                         <div class="param-possible">
-                                            <span class="param-possible-values">Possible Values: <code>&quot;JKS&quot; or &quot;PKCS12&quot;</code></span>
+                                            <span class="param-possible-values">Possible Values: <code>&quot;JKS&quot;</code></span>
                                         </div>
                                     </div>
                                     <div class="param-description">
@@ -4513,7 +4554,7 @@ force_json_validation = false</code></pre>
                                             <span class="param-default-value">Default: <code>JKS</code></span>
                                         </div>
                                         <div class="param-possible">
-                                            <span class="param-possible-values">Possible Values: <code>&quot;JKS&quot; or &quot;PKCS12&quot;</code></span>
+                                            <span class="param-possible-values">Possible Values: <code>&quot;JKS&quot;</code></span>
                                         </div>
                                     </div>
                                     <div class="param-description">
@@ -5102,6 +5143,27 @@ sender.so_timeout = 60000</code></pre>
                                         <p>The password for authenticating the proxy server.</p>
                                     </div>
                                 </div>
+                            </div><div class="param">
+                                <div class="param-name">
+                                  <span class="param-name-wrap"> <code>sender.parameter.maxTotalConnections</code> </span>
+                                </div>
+                                <div class="param-info">
+                                    <div>
+                                        <p>
+                                            <span class="param-type string"> integer </span>
+                                            
+                                        </p>
+                                        <div class="param-default">
+                                            <span class="param-default-value">Default: <code>20</code></span>
+                                        </div>
+                                        <div class="param-possible">
+                                            <span class="param-possible-values">Possible Values: <code>-</code></span>
+                                        </div>
+                                    </div>
+                                    <div class="param-description">
+                                        <p>The maximum number of connections allowed.</p>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -5515,7 +5577,7 @@ sender.parameter.customParameter = ""</code></pre>
                                             <span class="param-default-value">Default: <code>JKS</code></span>
                                         </div>
                                         <div class="param-possible">
-                                            <span class="param-possible-values">Possible Values: <code>&quot;JKS&quot; or &quot;PKCS12&quot;</code></span>
+                                            <span class="param-possible-values">Possible Values: <code>&quot;JKS&quot;</code></span>
                                         </div>
                                     </div>
                                     <div class="param-description">
@@ -5708,7 +5770,7 @@ sender.parameter.customParameter = ""</code></pre>
                                             <span class="param-default-value">Default: <code>JKS</code></span>
                                         </div>
                                         <div class="param-possible">
-                                            <span class="param-possible-values">Possible Values: <code>&quot;JKS&quot; or &quot;PKCS12&quot;</code></span>
+                                            <span class="param-possible-values">Possible Values: <code>&quot;JKS&quot;</code></span>
                                         </div>
                                     </div>
                                     <div class="param-description">
@@ -8795,7 +8857,7 @@ parameter.truststore_password = "$ref{truststore.password}"</code></pre>
                                             <span class="param-default-value">Default: <code>JKS</code></span>
                                         </div>
                                         <div class="param-possible">
-                                            <span class="param-possible-values">Possible Values: <code>&quot;JKS&quot; or &quot;PKCS12&quot;</code></span>
+                                            <span class="param-possible-values">Possible Values: <code>&quot;JKS&quot;</code></span>
                                         </div>
                                     </div>
                                     <div class="param-description">
@@ -8858,7 +8920,7 @@ parameter.truststore_password = "$ref{truststore.password}"</code></pre>
                                             <span class="param-default-value">Default: <code>JKS</code></span>
                                         </div>
                                         <div class="param-possible">
-                                            <span class="param-possible-values">Possible Values: <code>&quot;JKS&quot; or &quot;PKCS12&quot;</code></span>
+                                            <span class="param-possible-values">Possible Values: <code>&quot;JKS&quot;</code></span>
                                         </div>
                                     </div>
                                     <div class="param-description">

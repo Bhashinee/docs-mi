@@ -4,88 +4,92 @@ The AmazonSQS Inbound Endpoint allows you to connect to Amazon and consume messa
 
 ## What you'll build
 
-This scenario demonstrates how the AmazonSQS inbound endpoint works as a message consumer. In this scenario, you should have a connectivity with Amazon AWS account. Please follow the steps mentioned in the [Setting up the Amazon Lambda Environment]({{base_path}}/reference/connectors/amazonlambda-connector/setting-up-amazonlambda/) document in order to create an Amazon account and obtain access key id and secret access key.
+This scenario demonstrates how the AmazonSQS inbound endpoint works as a message consumer. The Amazon SQS queue will receive messages from a third-party system, while the integration runtime will keep listening to the messages from that queue. The WSO2 AmazonSQS Inbound Endpoint will receive the message and notify. If you are extending this sample scenario, you can perform any kind of mediation using the [mediators]({{base_path}}/reference/mediators/about-mediators/).
 
-The Amazon SQS queue will receive messages from a third party system, while the integration runtime will keep listening to the messages from that queue. First you need to create a **Queue** inside the **Simple Queue Service** and send a message to the created Queue. The WSO2 AmazonSQS Inbound Endpoint will receive the message and notify. If you are extending this sample scenario, you can perform any kind of mediation using the [mediators]({{base_path}}/reference/mediators/about-mediators/).
+## Prerequisites - Create AmazonSQS Simple Queue
 
-The Simple Queue Service will receive messages from the outside, while the AmazonSQS inbound endpoint will consume messages based on the updates.
+To proceed with this scenario, ensure you have connectivity to an Amazon AWS account. Follow these steps:
 
-## Configure inbound endpoint using WSO2 Integration Studio
+1. Refer to the [Setting up the Amazon Lambda Environment]({{base_path}}/reference/connectors/amazonlambda-connector/setting-up-amazonlambda/) to:
 
-1. Download [WSO2 Integration Studio](https://wso2.com/integration/integration-studio/). Create an **Integration Project** as below. 
+    1. Create an Amazon AWS account.
+    2. Obtain your **Access Key** ID and **Secret Access Key**
+
+2. Create a Simple Queue
+
+    1. Navigate to the Simple Queue Service (SQS) in your AWS Management Console.
+    2. Create a new Queue and obtain the **URL of the Amazon SQS Queue**.
+
+!!! Info
+    The parameters obtained in the [Create AmazonSQS Simple Queue](#prerequisites---create-amazonsqs-simple-queue) step are used for configurations as detailed below.
+
+    - **secret Key**    : The secret key used to sign requests.
+    - **access Key**    : The access key that corresponds to the secret key that you used to sign the request.
+    - **destination**   : URL of the Amazon SQS Queue from which you want to consume messages.
+
+
+## Set up the integration project
+
+1. Follow the steps in the [create integration project]({{base_path}}/develop/create-integration-project/) guide to set up the integration project. 
+
+2. Add a new **AmazonSQS inbound endpoint** by clicking the **+** icon in the **Inbound Endpoints** and select **AmazonSQS WSO2 Listner Connector**.
+
+    <img src="{{base_path}}/assets/img/integrate/connectors/sqs-inbound.png" title="Creating inbound endpoint" width="800" alt="Creating inbound endpoint"/>
+
+3. Configure the AmazonSQS inbound endpoint as shown below and click **Create**.
+
+    <img src="{{base_path}}/assets/img/integrate/connectors/sqs-inbound-form.png" title="Creating AmazonSQS inbound endpoint form" width="800" alt="Creating AmazonSQS inbound endpoint form"/>
+
+    !!! Note
+        When creating the SMPP inbound endpoint you have two options in defining the injecting sequence and error sequence.
+        <br/>- **Automatic**: Click the checkbox *Automatically generate sequence*
+        <br/>- **Manual**: You can select already defined sequences as injecting and error sequences.
+
+    !!! Info
+        In this example, we are using the **Automatic** option and that will create an injecting sequence named `AmazonSQSInboundEndpoint-inboundSequence` and an error sequence named `AmazonSQSInboundEndpoint-inboundErrorSequence`.<br/>
+
+    The source view of the created inbound endpoint is shown below.
+
+     ```xml
+     <?xml version="1.0" encoding="UTF-8"?>
+     <inboundEndpoint name="AmazonSQSInboundEndpoint" class="org.wso2.carbon.inbound.amazonsqs.AmazonSQSPollingConsumer" sequence="AmazonSQSInboundEndpoint-inboundSequence" onError="AmazonSQSInboundEndpoint-inboundErrorSequence" suspend="false">
+         <parameters xmlns="http://ws.apache.org/ns/synapse">
+             <parameter name="interval">2000</parameter>
+             <parameter name="sequential">true</parameter>
+             <parameter name="coordination">true</parameter>
+             <parameter name="destination">https://sqs.us-east-2.amazonaws.com/610968236798/eiconnectortestSQS</parameter>
+             <parameter name="contentType">text/plain</parameter>
+             <parameter name="accessKey">AKIAY4QELOL7GF35XBW5</parameter>
+             <parameter name="secretKey">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</parameter>
+             <parameter name="autoRemoveMessage">true</parameter>
+             <parameter name="attributeNames">All</parameter>
+         </parameters>
+     </inboundEndpoint> 
+     ```
+
+4. Implement the injecting sequence which processes the message - `AmazonSQSInboundEndpoint-inboundSequence`. 
    
-   <img src="{{base_path}}/assets/img/integrate/connectors/integration-project.png" title="Creating a new Integration Project" width="800" alt="Creating a new Integration Project" />
-
-2. Right click on **Created Integration Project** -> **New** -> **Inbound Endpoint** -> **Create A New Inbound Endpoint** -> **Inbound Endpoint Creation Type**and select as **custom** -> Click **Next**.
-   
-   <img src="{{base_path}}/assets/img/integrate/connectors/smpp-inboundep-create-new-ie.png" title="Creating inbound endpoint" width="400" alt="Creating inbound endpoint" style="border:1px solid black"/>
-
-3. Click on **Inbound Endpoint** in design view and under `properties` tab, update class name to `org.wso2.carbon.inbound.amazonsqs.AmazonSQSPollingConsumer`. 
-
-4. Navigate to the source view and update it with the following configuration as required. 
-     
-   ```xml
-   <?xml version="1.0" encoding="UTF-8"?>
-   <inboundEndpoint xmlns="http://ws.apache.org/ns/synapse"   
-                    name="AmazonSQS"    
-                    onError="requestISO" 
-                    sequence="request"    
-                    suspend="false" 
-                    class="org.wso2.carbon.inbound.amazonsqs.AmazonSQSPollingConsumer">
-       <parameters>
-           <parameter name="sequential">true</parameter>
-           <parameter name="interval">2000</parameter>
-           <parameter name="coordination">true</parameter>
-           <parameter name="waitTime">19</parameter>
-           <parameter name="maxNoOfMessage">10</parameter>
-           <parameter name="destination">https://sqs.us-east-2.amazonaws.com/610968236798/eiconnectortestSQS</parameter>
-           <parameter name="accessKey">AKIAY4QELOL7GF35XBW5</parameter>
-           <parameter name="secretKey">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</parameter>
-           <parameter name="attributeNames">attributeName1,contentType</parameter>
-           <parameter name="contentType">application/json</parameter>
-           <parameter name="class">org.wso2.carbon.inbound.amazonsqs.AmazonSQSPollingConsumer</parameter>
-           <parameter name="inbound.behavior">polling</parameter>
-       </parameters>
-   </inboundEndpoint>   
-   ```   
-   **Sequence to process the message**
-   
-   In this example, for simplicity we will just log the message, but in a real world use case, this can be any type of message mediation.
+    For simplicity, in this example you will just log the message. However, in a real-world use case, this could involve any type of message mediation.
  
-   ```xml
-   <?xml version="1.0" encoding="UTF-8"?>
-   <sequence name="request" trace="disable" xmlns="http://ws.apache.org/ns/synapse">
-       <log level="full"/>
-   </sequence>
-   ```
-> **Note**: To configure the `secretKey` and `accessKey` parameter value, please use the [Setting up the Amazon Lambda Environment]({{base_path}}/reference/connectors/amazonlambda-connector/setting-up-amazonlambda/) documentation.
-> - **secretKey** : The secret key used to sign requests.
-> - **accessKey** : The access key that corresponds to the secret key that you used to sign the request.
-> - **destination** : URL of the Amazon SQS Queue from which you want to consume messages.
+    ```xml
+    <?xml version="1.0" encoding="UTF-8"?>
+    <sequence name="request" trace="disable" xmlns="http://ws.apache.org/ns/synapse">
+        <log level="full"/>
+    </sequence>
+    ```
    
-## Exporting Integration Logic as a CApp
+## Export integration logic
 
-**CApp (Carbon Application)** is the deployable artefact on the integration runtime. Let us see how we can export integration logic we developed into a CApp. To export the `Solution Project` as a CApp, a `Composite Application Project` needs to be created. Usually, when a solution project is created, this project is automatically created by Integration Studio. If not, you can specifically create it by navigating to  **File** -> **New** -> **Other** -> **WSO2** -> **Distribution** -> **Composite Application Project**. 
-
-1. Right click on Composite Application Project and click on **Export Composite Application Project**.</br> 
-  <img src="{{base_path}}/assets/img/integrate/connectors/capp-project1.jpg" title="Export as a Carbon Application" width="300" alt="Export as a Carbon Application" />
-
-2. Select an **Export Destination** where you want to save the .car file. 
-
-3. In the next **Create a deployable CAR file** screen, select inbound endpoint and sequence artifacts and click **Finish**. The CApp will get created at the specified location provided in the previous step. 
+In order to export the project, refer to the [build and export the composite application]({{base_path}}/develop/deploy-artifacts/#build-and-export-the-carbon-application) guide. 
 
 ## Deployment
-
-1. Navigate to the [connector store](https://store.wso2.com/store/assets/esbconnector/list) and search for `AmazonSQS Connector`. Click on `AmazonSQS Inbound Endpoint` and download the .jar file by clicking on `Download Inbound Endpoint`. 
-   > **Note**: Copy this .jar file into **<PRODUCT-HOME>/dropins** folder.
   
-2. Copy the exported carbon application to the **<PRODUCT-HOME>/repository/deployment/server/carbonapps** folder. 
+In order to deploy and run the project, refer the [build and run]({{base_path}}/develop/deploy-artifacts/#build-and-run) guide.
 
-3. [Start the integration server]({{base_path}}/get-started/quick-start-guide/#start-the-micro-integrator). 
+## Test 
 
-## Testing  
-
-Please log in to the Amazon **Simple Queue Service**-> created **Queue**. Select the Queue and **right click**-> **Send a Message**-> enter **Message**, or you can even use [AmazonSQS Connector Example]({{base_path}}/reference/connectors/amazonsqs-connector/amazonsqs-connector-example) we have implemented before.
+1. Log in to the Amazon **Simple Queue Service** -> created **Queue**. 
+2. Select the Queue and right click -> **Send a Message**-> enter `Message`, or you can even use [AmazonSQS Connector Example]({{base_path}}/reference/connectors/amazonsqs-connector/amazonsqs-connector-example) we have implemented before.
 
 **Sample Message**
 
